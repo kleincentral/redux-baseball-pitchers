@@ -1,36 +1,40 @@
-import {useState} from 'react';
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  const [currentPitcher, setCurrentPitcher] = useState('Maud Nelson');
-  const [currentCatcher, setCurrentCatcher] = useState('Elston Howard');
+  const [currentPitcher, setCurrentPitcher] = useState("Maud Nelson");
+  const [currentCatcher, setCurrentCatcher] = useState("Elston Howard");
 
-  const [pitcherList, setPitcherList] = useState(['Maud Nelson', 'Ila Borders', 'Don Newcombe', 'CC Sabathia']);
-  const [catcherList, setCatcherList] = useState(['Roy Campanella', 'Elston Howard', 'Kenji Jojima']);
-  const [newPitcher, setNewPitcher] = useState('');
-  const [newCatcher, setNewCatcher] = useState('');
+  const pitcherList = useSelector((store) => store.pitcherNames);
+  const catcherList = useSelector((store) => store.catcherNames);
 
-  const handlePitcherNameChange = event => {
+  const [newPitcher, setNewPitcher] = useState("");
+  const [newCatcher, setNewCatcher] = useState("");
+
+  const dispatch = useDispatch();
+
+  const handlePitcherNameChange = (event) => {
     setNewPitcher(event.target.value);
   };
 
   // add new pitcher to the array. this will move to the pitcher reducer!
-  const handlePitcherSubmit = event => {
+  const handlePitcherSubmit = (event) => {
     event.preventDefault();
     // spread: give me everything in pitcherList, then add this new thing
-    setPitcherList([...pitcherList, newPitcher]);
-    setNewPitcher('');
+    dispatch({ type: "ADD_PITCHER", payload: newPitcher });
+    setNewPitcher("");
   };
 
-  const handleCatcherNameChange = event => {
+  const handleCatcherNameChange = (event) => {
     setNewCatcher(event.target.value);
   };
 
   // add new catcher to array. this will move to the catcher reducer!
-  const handleCatcherSubmit = event => {
+  const handleCatcherSubmit = (event) => {
     event.preventDefault();
     // spread: give me everything in catcherList, then add this new thing
-    setCatcherList([...catcherList, newCatcher]);
-    setNewCatcher('');
+    dispatch({ type: "ADD_CATCHER", payload: newCatcher });
+    setNewCatcher("");
   };
 
   return (
@@ -51,12 +55,8 @@ function App() {
         <button type="submit">Add Pitcher</button>
       </form>
       <ul>
-        {pitcherList.map(pitcher => (
-          <li
-            onClick={() => setCurrentPitcher(pitcher)}
-          >
-            {pitcher}
-          </li>
+        {pitcherList.map((pitcher) => (
+          <li onClick={() => setCurrentPitcher(pitcher)}>{pitcher}</li>
         ))}
       </ul>
       <h3>All Catchers</h3>
@@ -70,12 +70,8 @@ function App() {
         <button type="submit">Add Catcher</button>
       </form>
       <ul>
-        {catcherList.map(catcher => (
-          <li
-            onClick={() => setCurrentCatcher(catcher)}
-          >
-            {catcher}
-          </li>
+        {catcherList.map((catcher) => (
+          <li onClick={() => setCurrentCatcher(catcher)}>{catcher}</li>
         ))}
       </ul>
     </div>
